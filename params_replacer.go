@@ -134,7 +134,7 @@ func appendBytes(buf, v []byte) []byte {
 }
 
 func appendDateTime(buf []byte, t time.Time) []byte {
-	buf = t.In(time.UTC).AppendFormat(buf, "2006-01-02 15:04:05")
+	buf = t.AppendFormat(buf, "2006-01-02 15:04:05")
 	return buf
 }
 

@@ -53,13 +53,13 @@ func TestParamsInterpolator_Interpolate(t *testing.T) {
 		{
 			name: "string bytes time zone",
 			fields: fields{
-				Local: time.Local,
+				Local: shanghaiLoc,
 			},
 			args: args{
 				query: "INSERT INTO table_name (field1, field2, field3) VALUES (?, ?, ?,?);",
 				args:  []driver.Value{int64(1), string("\"hello\""), []byte("123abc&()"), time.Date(2024, 5, 5, 0, 0, 0, 0, shanghaiLoc)},
 			},
-			want:    "INSERT INTO table_name (field1, field2, field3) VALUES (1, '\\\"hello\\\"', X'313233616263262829','2024-05-04 16:00:00');",
+			want:    "INSERT INTO table_name (field1, field2, field3) VALUES (1, '\\\"hello\\\"', X'313233616263262829','2024-05-05 00:00:00');",
 			wantErr: assert.NoError,
 		},
 		{

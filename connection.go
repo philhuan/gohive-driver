@@ -11,8 +11,9 @@ import (
 
 // hiveOptions for opened Hive sessions.
 type hiveOptions struct {
-	PollIntervalSeconds int64
-	BatchSize           int64
+	PollIntervalSeconds     int64
+	BatchSize               int64
+	ColumnsWithoutTableName bool // column names not contains table name
 }
 
 type hiveConnection struct {

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 	"time"
 
 	hiveserver2 "sqlflow.org/gohive/hiveserver2/gen-go/tcliservice"
@@ -86,11 +87,23 @@ func (r *rowSet) Columns() []string {
 		}
 		ret := make([]string, len(r.columns))
 		for i, col := range r.columns {
+			if r.options.ColumnsWithoutTableName {
+				ret[i] = columnRemoveTable(col.ColumnName)
+				continue
+			}
 			ret[i] = col.ColumnName
 		}
 		r.columnStrs = ret
 	}
 	return r.columnStrs
+}
+
+func columnRemoveTable(n string) string {
+	index := strings.Index(n, ".")
+	if index == -1 {
+		return n
+	}
+	return n[index+1:]
 }
 
 func (r *rowSet) Close() (err error) {

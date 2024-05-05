@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+const (
+	TimeStampLayout = "2006-01-02 15:04:05.999999999"
+	DateLayout      = "2006-01-02"
+)
+
 type ParamsInterpolator struct {
 	Local *time.Location
 }
@@ -134,7 +139,7 @@ func appendBytes(buf, v []byte) []byte {
 }
 
 func appendDateTime(buf []byte, t time.Time) []byte {
-	buf = t.AppendFormat(buf, "2006-01-02 15:04:05")
+	buf = t.AppendFormat(buf, TimeStampLayout)
 	return buf
 }
 

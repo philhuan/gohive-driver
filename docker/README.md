@@ -7,10 +7,10 @@ The general usage is that we check out the source code on the host computer, the
 
 ## Check out the Source Code
 
-Run the following command to clone GoHive to `$GOPATH/src/sqlflow.org/gohive` on your host computer:
+Run the following command to clone GoHive to `$GOPATH/src/github.com/philhuan/gohive-driver` on your host computer:
 
 ```bash
-go get sqlflow.org/gohive
+go get github.com/philhuan/gohive-driver
 ```
 
 
@@ -30,7 +30,7 @@ The following command starts a container with Hive running inside, so could we b
 
 ```bash
 docker run --rm -it -v $GOPATH:/go \
-    -w /go/src/sqlflow.org/gohive \
+    -w /go/src/github.com/philhuan/gohive-driver \
     gohive:dev bash
 ```
 

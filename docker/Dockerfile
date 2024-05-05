@@ -189,5 +189,5 @@ rm protoc-21.3-linux-x86_64.zip && \
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
 mv /go/bin/protoc-gen-go /usr/local/bin/
 
-RUN echo "go get -t sqlflow.org/gohive && go test -v sqlflow.org/gohive" > /build_and_test.bash
+RUN echo "go get -t github.com/philhuan/gohive-driver && go test -v github.com/philhuan/gohive-driver" > /build_and_test.bash
 RUN chmod +x /build_and_test.bash

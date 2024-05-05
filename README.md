@@ -12,10 +12,10 @@ We found many open source Hive clients in Go. However we cannot find one complet
 GoHive is go-gettable.  Please run the following command to install it:
 
 ```bash
-go get sqlflow.org/gohive
+go get github.com/philhuan/gohive-driver
 ```
 
-`sqlflow.org/gohive` is a [vanity import path](https://blog.bramp.net/post/2017/10/02/vanity-go-import-paths/) of GoHive.
+`github.com/philhuan/gohive-driver` is a [vanity import path](https://blog.bramp.net/post/2017/10/02/vanity-go-import-paths/) of GoHive.
 
 
 ## For Developers

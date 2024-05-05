@@ -1,4 +1,4 @@
-module sqlflow.org/gohive
+module github.com/philhuan/gohive-driver
 
 go 1.18
 

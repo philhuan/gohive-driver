@@ -1,5 +1,5 @@
 language: go
-go_import_path: sqlflow.org/gohive
+go_import_path: github.com/philhuan/gohive-driver
 
 branches:
   only:
@@ -27,5 +27,5 @@ script:
   # one changing the Docker image, which must be merged before the
   # other one that changes the source code to be CI'ed with the
   # updated Docker image.
-  - docker run --rm -v $GOPATH:/go -w /go/src/sqlflow.org/gohive sqlflow/gohive:dev bash test.sh
-  - docker run -e WITH_HS2_PAM_AUTH=ON --rm -v $GOPATH:/go -w /go/src/sqlflow.org/gohive sqlflow/gohive:dev bash test.sh
+  - docker run --rm -v $GOPATH:/go -w /go/src/github.com/philhuan/gohive-driver github.com/philhuan/gohive-driver:dev bash test.sh
+  - docker run -e WITH_HS2_PAM_AUTH=ON --rm -v $GOPATH:/go -w /go/src/github.com/philhuan/gohive-driver github.com/philhuan/gohive-driver:dev bash test.sh

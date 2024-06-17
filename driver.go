@@ -39,6 +39,32 @@ func (d drv) Open(dsn string) (driver.Conn, error) {
 		}
 		bgTransport.SetMaxLength(uint32(cfg.Batch))
 		transport = bgTransport
+	} else if cfg.Auth == "NONE" {
+		// NONE MODE COPIED FROM "beltran/gohive"
+		// 1. username must be set.
+		// 2. password may not matter but can't be empty
+		if cfg.User == "" {
+			_user, err := user.Current()
+			if err != nil {
+				return nil, fmt.Errorf("can't determine the username: %v", err)
+			}
+			cfg.User = strings.Replace(_user.Name, " ", "", -1)
+		}
+		// password may not matter but can't be empty
+		if cfg.Passwd == "" {
+			cfg.Passwd = "x"
+		}
+		saslCfg := map[string]string{
+			"username": cfg.User,
+			"password": cfg.Passwd,
+		}
+		// Must PLAIN, not NONE.
+		bgTransport, err := bgohive.NewTSaslTransport(socket, cfg.Addr, "PLAIN", saslCfg, bgohive.DEFAULT_MAX_LENGTH)
+		if err != nil {
+			return nil, fmt.Errorf("create SasalTranposrt failed: %v", err)
+		}
+		bgTransport.SetMaxLength(uint32(cfg.Batch))
+		transport = bgTransport
 	} else {
 		return nil, fmt.Errorf("unrecognized auth mechanism: %s", cfg.Auth)
 	}

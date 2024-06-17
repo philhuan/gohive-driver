@@ -58,7 +58,6 @@ func (d drv) Open(dsn string) (driver.Conn, error) {
 			"username": cfg.User,
 			"password": cfg.Passwd,
 		}
-		fmt.Println(saslCfg)
 		// Must PLAIN, not NONE.
 		bgTransport, err := bgohive.NewTSaslTransport(socket, cfg.Addr, "PLAIN", saslCfg, bgohive.DEFAULT_MAX_LENGTH)
 		if err != nil {

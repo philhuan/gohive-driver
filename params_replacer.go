@@ -16,32 +16,32 @@ const (
 )
 
 type ArgsWriter interface {
-	ArgsValue() ([]byte, error)
+	ArgsWrite() ([]byte, error)
 }
 
 var _ ArgsWriter = &SimpleArgsWriter{}
 
 type SimpleArgsWriter []byte
 
-func NewSimpleSQLParamsArgsWriter(value []byte) SimpleArgsWriter {
+func NewSimpleArgsWriter(value []byte) SimpleArgsWriter {
 	return value
 }
 
-func (s SimpleArgsWriter) ArgsValue() ([]byte, error) {
+func (s SimpleArgsWriter) ArgsWrite() ([]byte, error) {
 	return s, nil
 }
 
-var _ ArgsWriter = &ValueSQLParamsArgsWriter{}
+var _ ArgsWriter = &ValueArgsWriter{}
 
-type ValueSQLParamsArgsWriter struct {
+type ValueArgsWriter struct {
 	Value driver.Value
 }
 
-func NewValueSQLParamsArgsWriter(value driver.Value) *ValueSQLParamsArgsWriter {
-	return &ValueSQLParamsArgsWriter{Value: value}
+func NewValueArgsWriter(value driver.Value) *ValueArgsWriter {
+	return &ValueArgsWriter{Value: value}
 }
 
-func (v ValueSQLParamsArgsWriter) ArgsValue() (
+func (v ValueArgsWriter) ArgsWrite() (
 	[]byte, error) {
 	switch rv := v.Value.(type) {
 	case string:
@@ -153,7 +153,7 @@ func (p *ParamsInterpolator) interpolateOne(buf []byte, arg driver.Value) ([]byt
 		buf = escapeStringBackslash(buf, v)
 		buf = append(buf, '\'')
 	case ArgsWriter:
-		bs, err := v.ArgsValue()
+		bs, err := v.ArgsWrite()
 		if err != nil {
 			return nil, err
 		}

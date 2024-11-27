@@ -14,7 +14,7 @@ var _ ArgsWriter = &testSQLParamsArgsWriter{}
 type testSQLParamsArgsWriter struct {
 }
 
-func (t *testSQLParamsArgsWriter) ArgsValue() ([]byte, error) {
+func (t *testSQLParamsArgsWriter) ArgsWrite() ([]byte, error) {
 	return []byte("MAP(a,1,b,2)"), nil
 }
 
@@ -114,7 +114,7 @@ func TestParamsInterpolator_Interpolate(t *testing.T) {
 			},
 			args: args{
 				query: "INSERT INTO table_name (m) VALUES (?);",
-				args:  []driver.Value{NewSimpleSQLParamsArgsWriter([]byte("MAP(a,1,b,2)"))},
+				args:  []driver.Value{NewSimpleArgsWriter([]byte("MAP(a,1,b,2)"))},
 			},
 			want:    "INSERT INTO table_name (m) VALUES (MAP(a,1,b,2));",
 			wantErr: assert.NoError,

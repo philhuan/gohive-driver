@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"os/user"
+	"strings"
 
 	"github.com/apache/thrift/lib/go/thrift"
 	bgohive "github.com/beltran/gohive"

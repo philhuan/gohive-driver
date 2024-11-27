@@ -9,6 +9,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var _ ArgsWriter = &testSQLParamsArgsWriter{}
+
+type testSQLParamsArgsWriter struct {
+}
+
+func (t *testSQLParamsArgsWriter) ArgsWrite() ([]byte, error) {
+	return []byte("MAP(a,1,b,2)"), nil
+}
+
 func TestParamsInterpolator_Interpolate(t *testing.T) {
 	shanghaiLoc, err := time.LoadLocation("Asia/Shanghai")
 	assert.NoError(t, err)
@@ -84,6 +93,30 @@ func TestParamsInterpolator_Interpolate(t *testing.T) {
 				args:  []driver.Value{string(`abc \\\&&&`)},
 			},
 			want:    "DELETE FROM table_name WHERE id = 'abc \\\\\\\\\\\\&&&';",
+			wantErr: assert.NoError,
+		},
+		{
+			name: "ArgsWriter",
+			fields: fields{
+				Local: shanghaiLoc,
+			},
+			args: args{
+				query: "INSERT INTO table_name (m) VALUES (?);",
+				args:  []driver.Value{&testSQLParamsArgsWriter{}},
+			},
+			want:    "INSERT INTO table_name (m) VALUES (MAP(a,1,b,2));",
+			wantErr: assert.NoError,
+		},
+		{
+			name: "SimpleArgsWriter",
+			fields: fields{
+				Local: shanghaiLoc,
+			},
+			args: args{
+				query: "INSERT INTO table_name (m) VALUES (?);",
+				args:  []driver.Value{NewSimpleArgsWriter([]byte("MAP(a,1,b,2)"))},
+			},
+			want:    "INSERT INTO table_name (m) VALUES (MAP(a,1,b,2));",
 			wantErr: assert.NoError,
 		},
 	}

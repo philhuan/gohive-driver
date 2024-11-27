@@ -15,6 +15,44 @@ const (
 	DateLayout      = "2006-01-02"
 )
 
+type ArgsWriter interface {
+	ArgsValue() ([]byte, error)
+}
+
+var _ ArgsWriter = &SimpleArgsWriter{}
+
+type SimpleArgsWriter []byte
+
+func NewSimpleSQLParamsArgsWriter(value []byte) SimpleArgsWriter {
+	return value
+}
+
+func (s SimpleArgsWriter) ArgsValue() ([]byte, error) {
+	return s, nil
+}
+
+var _ ArgsWriter = &ValueSQLParamsArgsWriter{}
+
+type ValueSQLParamsArgsWriter struct {
+	Value driver.Value
+}
+
+func NewValueSQLParamsArgsWriter(value driver.Value) *ValueSQLParamsArgsWriter {
+	return &ValueSQLParamsArgsWriter{Value: value}
+}
+
+func (v ValueSQLParamsArgsWriter) ArgsValue() (
+	[]byte, error) {
+	switch rv := v.Value.(type) {
+	case string:
+		return []byte(rv), nil
+	case []byte:
+		return rv, nil
+	default:
+		return nil, fmt.Errorf("gohive driver: ArgsWriter unsupported value type: %T", v.Value)
+	}
+}
+
 type ParamsInterpolator struct {
 	Local *time.Location
 }
@@ -114,6 +152,12 @@ func (p *ParamsInterpolator) interpolateOne(buf []byte, arg driver.Value) ([]byt
 		buf = append(buf, '\'')
 		buf = escapeStringBackslash(buf, v)
 		buf = append(buf, '\'')
+	case ArgsWriter:
+		bs, err := v.ArgsValue()
+		if err != nil {
+			return nil, err
+		}
+		buf = append(buf, bs...)
 	default:
 		return nil, fmt.Errorf("gohive driver: unexpected args type: %T", arg)
 	}
